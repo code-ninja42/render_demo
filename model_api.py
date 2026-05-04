@@ -21,7 +21,8 @@ def home():
 @app.post("/predict")
 def predict(data: dict):
     exp = float(data['YearsExperience'])
-    result = model.predict([[exp]])
+    import pandas as pd
+    result = model.predict(pd.DataFrame([[exp]], columns=["YearsExperience"]))
 
     return {
         "YearsExperience": exp,
