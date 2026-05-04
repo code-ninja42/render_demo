@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Salary Predictor</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at top, #270f12, #203a43, #2c5364);
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        h1 span {
+            color: #2ee6c9;
+        }
+
+        p {
+            color: #cbd5e1;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            margin: auto;
+            width: 400px;
+            padding: 30px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            text-align: left;
+        }
+
+        label {
+            font-size: 14px;
+            color: #d1d5db;
+        }
+
+        input {
+            width: 100%;
+            margin-top: 8px;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #94a3b8;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #59e1cd, #ed8d8d);
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #result {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Salary <span>Predictor</span></h1>
+    <p>blahhhh</p>
+
+    <div class="card">
+        <label>Years of experience</label>
+        <input type="number" id="exp" placeholder="e.g. 3">
+
+        <button onclick="predictSalary()">Predict salary</button>
+
+        <div id="result"></div>
+    </div>
+</div>
+
+<script>
+function predictSalary() {
+    let exp = document.getElementById("exp").value;
+    let resultBox = document.getElementById("result");
+
+    if (exp === "") {
+        resultBox.innerText = "Please enter experience";
+        return;
+    }
+
+    resultBox.innerText = "Predicting...";
+
+    fetch("http://127.0.0.1:8000/predict", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        YearsExperience: exp
+    })
+    })
+    .then(res => res.json())
+    .then(data => {
+        resultBox.innerText =
+            "Predicted Salary: ₹ " +
+            Math.round(data.PredictedSalary).toLocaleString();
+    })
+    .catch(() => {
+        resultBox.innerText = "Server error";
+    });
+}
+</script>
+
+</body>
+</html>
